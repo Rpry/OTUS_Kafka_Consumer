@@ -8,32 +8,31 @@ namespace Consumer.Consumers
 {
     public class Consumer
     {
-        public ConsumerConfig _consumerConfig;
+        private ConsumerConfig _consumerConfig;
+        private IConsumer<string, string> _kafkaConsumer;
         
-        public Consumer(IConfiguration configuration, string groupId)
+        public Consumer(IConfiguration configuration, string groupId, string topicName)
         {
-            _consumerConfig = GetRabbitConnection(groupId, configuration);
+            _consumerConfig = GetConsumerConfig(groupId, configuration);
+            _kafkaConsumer = new ConsumerBuilder<string, string>(_consumerConfig).Build();
+            var topics = new List<string>() { topicName };
+            _kafkaConsumer.Subscribe(topics);
         }
 
-        public void Consume(string topicName)
+        public void Consume()
         {
-            var topics = new List<string>() { topicName };
-            using (var consumer = new ConsumerBuilder<string, string>(_consumerConfig).Build())
+            var consumeResult = _kafkaConsumer.Consume(TimeSpan.FromSeconds(10));
+            if (consumeResult != null)
             {
-                consumer.Subscribe(topics);
-                var consumeResult = consumer.Consume(TimeSpan.FromSeconds(10));
-                if (consumeResult != null)
-                {
-                    Console.WriteLine($"INCOMING MESSAGE: {consumeResult.Message.Value}");    
-                }
-                else
-                {
-                    Console.WriteLine("no message...");
-                }
+                Console.WriteLine($"RECEIVED: {consumeResult.Message.Value} (Partition: {consumeResult.Partition.Value} Offset: {consumeResult.Offset.Value})");    
+            }
+            else
+            {
+                Console.WriteLine("no message...");
             }
         }
         
-        private static ConsumerConfig GetRabbitConnection(string groupId, IConfiguration configuration)
+        private static ConsumerConfig GetConsumerConfig(string groupId, IConfiguration configuration)
         {
             var kafkaSettings = configuration.Get<ApplicationSettings>().KafkaSettings;
             var config = new ConsumerConfig

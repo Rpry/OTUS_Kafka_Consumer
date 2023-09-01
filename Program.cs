@@ -14,10 +14,10 @@ namespace Consumer
             var groupId = args[0] ?? "1";
             Console.WriteLine($"Consumer of groupId {groupId} was started");
 
-            var consumer = new Consumers.Consumer(configuration, groupId);
+            var consumer = new Consumers.Consumer(configuration, groupId, "Events");
             while (true)
             {
-                consumer.Consume("Events");
+                consumer.Consume();
             }
         }
     }
