@@ -21,7 +21,6 @@ public abstract class ConsumerBackgroundService<TKey, TValue>: BackgroundService
     {
         _baseConsumer = new BaseConsumer<TKey, TValue>(applicationOptions.KafkaOptions, logger, applicationOptions.GroupId);
         _logger = logger;
-        
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -49,7 +48,7 @@ public abstract class ConsumerBackgroundService<TKey, TValue>: BackgroundService
                 await Task.Delay(100, cancellationToken);
                 return;
             }
-
+            
             await HandleAsync(message, cancellationToken);
             _baseConsumer.Consumer.Commit();
         }
