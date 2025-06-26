@@ -48,7 +48,7 @@ public abstract class ConsumerBackgroundService<TKey, TValue>: BackgroundService
                 await Task.Delay(100, cancellationToken);
                 return;
             }
-            
+
             await HandleAsync(message, cancellationToken);
             _baseConsumer.Consumer.Commit();
         }
