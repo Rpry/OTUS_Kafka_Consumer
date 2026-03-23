@@ -7,16 +7,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Consumer.Consumers;
 
-public class NewOrderConsumer: ConsumerBackgroundService<string, OrderCreatedMessage>
+public sealed class NewOrderConsumer: ConsumerBackgroundService<string, OrderCreatedMessage>
 {
     private readonly ILogger<NewOrderConsumer> _logger;
-    
+
     public NewOrderConsumer(
         ILogger<NewOrderConsumer> logger,
         ApplicationOptions applicationOptions)
         : base(logger, applicationOptions)
     {
-        TopicName = "order_events";
+        TopicName = "topicname2";
         //TopicName = "mytopic4";
         _logger = logger;
     }

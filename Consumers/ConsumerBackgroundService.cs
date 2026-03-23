@@ -11,11 +11,11 @@ namespace Consumer.Consumers;
 
 public abstract class ConsumerBackgroundService<TKey, TValue>: BackgroundService where TValue: IKafkaMessage
 {
-    private ILogger _logger;
-    private BaseConsumer<TKey, TValue> _baseConsumer;
+    private readonly ILogger _logger;
+    private readonly BaseConsumer<TKey, TValue> _baseConsumer;
     protected abstract string TopicName { get; }
-    
-    public ConsumerBackgroundService(
+
+    protected ConsumerBackgroundService(
         ILogger logger,
         ApplicationOptions applicationOptions)
     {
@@ -31,7 +31,7 @@ public abstract class ConsumerBackgroundService<TKey, TValue>: BackgroundService
         {
             await Consume(stoppingToken);
         }
-        
+
         _baseConsumer.Consumer.Unsubscribe();
         _logger.LogInformation($"Stop consumer topic {TopicName}");
     }

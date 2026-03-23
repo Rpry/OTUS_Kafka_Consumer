@@ -5,7 +5,7 @@ using Consumer.Models;
 
 namespace Consumer.Utils;
 
-public class KafkaMessageDeserializer<T> : IDeserializer<T> where T: IKafkaMessage
+public sealed class KafkaMessageDeserializer<T> : IDeserializer<T> where T: IKafkaMessage
 {
     public T Deserialize(ReadOnlySpan<byte> data, bool isNull, SerializationContext context)
     {

@@ -8,7 +8,7 @@ namespace Consumer.Consumers;
 
 public sealed class BaseConsumer<TKey, TValue> where TValue : IKafkaMessage
 {
-    private ILogger _logger;
+    private readonly ILogger _logger;
 
     public IConsumer<TKey, TValue> Consumer { get; }
 

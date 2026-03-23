@@ -7,28 +7,28 @@ using Microsoft.Extensions.Logging;
 
 namespace Consumer
 {
-    class Program
+    internal class Program
     {
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
         }
-        
+
         private static IHostBuilder CreateHostBuilder(string[] args)
         {
             IConfiguration configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .Build();
-            
+
             return Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
                     var options = configuration.Get<ApplicationOptions>();
                     services.AddSingleton(options);
-                    services.AddLogging((configuration) =>
+                    services.AddLogging(cfg =>
                     {
-                        configuration.AddConsole();
+                        cfg.AddConsole();
                     });
                     services.AddHostedService<NewOrderConsumer>();
                 });
